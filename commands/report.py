@@ -9,7 +9,7 @@ import aiohttp
 import sqlite3
 from pymongo import MongoClient
 
-cluster = MongoClient("mongodb+srv://RealKiller666:sovietteam99@warn-command-db.5yzya.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+cluster = MongoClient() #Put your own here
 database = cluster["RealKiller666"]
 collection = database["warn-database"]
 
