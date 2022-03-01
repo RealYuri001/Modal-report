@@ -14,4 +14,4 @@ for file in os.listdir('./commands'):
         client.load_extension("commands."+ file[:-3])
 
 keep_alive()
-client.run("OTQzNzExNDI2Njk3MTM0MTMw.Yg3BwQ.aSWPb_o7pG27ktEZhNr7m6qQSH8")
+client.run("token") #Put your own token
