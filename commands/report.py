@@ -39,7 +39,7 @@ class ReportButton(discord.ui.View):
                         await webhook.send(content)
                 
                 e = await self.client.fetch_message(interaction.message.content)
-                await WebhookSend('https://discord.com/api/webhooks/947396541147123753/zYHj5BL6KiwcotrBRa7apTf9hiyzuwum4-ULYAQJR5_W62MqTXzmCnU01Yh-emkqdpLE', e)
+                await WebhookSend('', e) #Get your own webhook
             
             elif msg.content == "no":
                 await interaction.response.send_message("Look like we are not doing it today.")
