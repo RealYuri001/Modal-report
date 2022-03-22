@@ -7,15 +7,11 @@ import datetime
 import platform
 import aiohttp
 import sqlite3
-from pymongo import MongoClient
-
-cluster = MongoClient() #Put your own here
-database = cluster["RealKiller666"]
-collection = database["warn-database"]
 
 class ReportButton(discord.ui.View):
     def __init__(self, client):
         super().__init__(timeout=None)
+        
         self.client = client
     
     @discord.ui.button(label="Confirm", style=discord.ButtonStyle.green, emoji="<:check_mark:946347634199765002>")
@@ -78,14 +74,14 @@ class ReportModal(Modal):
         self.add_item(InputText(label="Proof:", value="", style=discord.InputTextStyle.long))
     
     async def callback(self, interaction: discord.Interaction):
-        embed = discord.Embed(title="`✦ ˑ ִֶָ 𓂃⊹ New Report Case")
+        embed = discord.Embed(title="`✦ ˑ ִֶָ 𓂃⊹ New Report Case", color=0xe74c3c)
         embed.add_field(name="Report user(s):", value=self.children[0].value, inline=False)
         embed.add_field(name="Reason:", value=self.children[1].value, inline=False)
         embed.add_field(name="Proof:", value=self.children[2].value, inline=False)
         user = interaction.user.id
         embed.set_footer(text=f"Reported by {user}", icon_url=interaction.user.avatar)
 
-        channel = await self.client.fetch_channel(770265716280000513) #Reminder: 946353213467152404
+        channel = await self.client.fetch_channel() #Fetch your own channel.
         self.c.execute('INSERT INTO report_case (status, user_id, reason, proof) VALUES (?, ?, ?, ?)', ("Pending", self.children[0].value, self.children[1].value, self.children[2].value)) #Insert a data to SQLite db.
         self.conn.commit() #Commit to db.
         view = ReportButton(client=self.client)
@@ -121,24 +117,6 @@ class Report(commands.Cog):
             view.add_item(button)
             view.add_item(button2)
             await interaction.response.send_message(embed=embed, view=view)
-    
-    @commands.command()
-    @commands.is_owner()
-    async def warn(self, ctx, user: discord.User,*, reason=None):
-        id = user.id
-        if collection.count_documents({"memberid": id}) == 0:
-            collection.insert_one({"memberid": id, "warns": 0})
-        if user is None:
-            return await ctx.send("Please specify a user to warn!")
-        
-        warn_count = collection.find_one({"memberid": id})
-
-        count = warn_count["warns"]
-        new_count = count + 1
-
-        collection.update_one({"memberid": id}, {"$set":{"warns": new_count}})
-        
-        await ctx.send(f"Warned {str(user)} for {reason}. | They now have {new_count} warnings.")
 
 def setup(client):
     client.add_cog(Report(client))
